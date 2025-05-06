@@ -1,0 +1,42 @@
+import axios from 'axios';
+import { useState } from 'react';
+
+export default function Upload() {
+  const [file, setFile] = useState(null);
+  const [data, setData] = useState([]);
+
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await axios.post("http://localhost:5000/api/upload", formData);
+    setData(res.data.data);
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleUpload}>
+        <input type="file" accept=".xlsx,.csv" onChange={e => setFile(e.target.files[0])} />
+        <button type="submit">Upload</button>
+      </form>
+
+      {data.length > 0 && (
+        <table border="1">
+          <thead>
+            <tr>
+              {Object.keys(data[0]).map((key, i) => <th key={i}>{key}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((row, idx) => (
+              <tr key={idx}>
+                {Object.values(row).map((val, i) => <td key={i}>{val}</td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+}
