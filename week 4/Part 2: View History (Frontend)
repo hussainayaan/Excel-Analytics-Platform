@@ -1,1 +1,27 @@
+// 📁 frontend/src/pages/History.jsx
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+
+const History = () => {
+  const [history, setHistory] = useState([]);
+
+  useEffect(() => {
+    axios.get("/api/history", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    }).then(res => setHistory(res.data));
+  }, []);
+
+  return (
+    <div>
+      <h2>Upload History</h2>
+      <ul>
+        {history.map((h, i) => (
+          <li key={i}>{h.fileName} - {h.chartType}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default History;
 
