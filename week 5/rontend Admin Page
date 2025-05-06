@@ -1,0 +1,26 @@
+// 📁 frontend/src/pages/AdminPanel.jsx
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+
+const AdminPanel = () => {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    axios.get("/api/admin/users", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    }).then(res => setUsers(res.data));
+  }, []);
+
+  return (
+    <div>
+      <h2>Admin Panel - User List</h2>
+      <ul>
+        {users.map(u => (
+          <li key={u._id}>{u.username} ({u.email})</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default AdminPanel;
